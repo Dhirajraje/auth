@@ -1,9 +1,12 @@
-from fastapi import APIRouter, Depends,status
+from fastapi import APIRouter, Depends,status,Body
 from fastapi.responses import Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.v1.user.model import User
 from app.core.db.database import get_session
 from app.core.exceptions.api_exceptions import APIException
+from .service import get_user
+from .schema import CreateUserSchema
+
 
 
 user_router = APIRouter(tags=['User APIs'])
@@ -24,17 +27,18 @@ async def get_user_by_id(user_id,db: AsyncSession = Depends(get_session)):
 
 
 @user_router.get('/')
-async def get_users():
+async def get_users(db=Depends(get_session),offset=0,limit=18):
     try:
-        user = {}
-        return user
-    except Exception as _:
+        users = await get_user(db,offset=offset,limit=limit)
+        return users
+    except Exception as ex:
+        print(ex)
         raise APIException()
     
 
 
 @user_router.post('/')
-async def add_user():
+async def add_user(user_details:CreateUserSchema = Body()):
     try:
         user = {}
         return user
