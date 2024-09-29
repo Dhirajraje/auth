@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.v1.user.model import User
 from app.core.db.database import get_session
 from app.core.exceptions.api_exceptions import APIException
-from .service import get_user
+from .service import create_user, get_user
 from .schema import CreateUserSchema
 
 
@@ -27,7 +27,7 @@ async def get_user_by_id(user_id,db: AsyncSession = Depends(get_session)):
 
 
 @user_router.get('/')
-async def get_users(db=Depends(get_session),offset=0,limit=18):
+async def get_users(db=Depends(get_session),offset:int=0,limit:int=18):
     try:
         users = await get_user(db,offset=offset,limit=limit)
         return users
@@ -38,10 +38,10 @@ async def get_users(db=Depends(get_session),offset=0,limit=18):
 
 
 @user_router.post('/')
-async def add_user(user_details:CreateUserSchema = Body()):
+async def add_user(user_details:CreateUserSchema = Body(),db=Depends(get_session)):
     try:
-        user = {}
-        return user
+        _user = await create_user(db,user_details)
+        return _user
     except Exception as _:
         raise APIException()
 

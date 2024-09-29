@@ -13,5 +13,6 @@ async def get_user(db,offset=0,limit=18):
     print(users)
     return users
 
-def create_user(db):
-    ...
+async def create_user(db,user):
+    _user = await _user_crud.create(db,user)
+    return _user
