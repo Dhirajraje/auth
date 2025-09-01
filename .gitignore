@@ -1,0 +1,10 @@
+.venv/
+
+.env
+
+__pycache__/
+*.pyc
+
+instance
+
+sql_app.db
