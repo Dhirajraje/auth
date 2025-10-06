@@ -15,6 +15,7 @@ class GoogleProvider(BaseProvider):
         return all([settings.GOOGLE_CLIENT_ID, settings.GOOGLE_CLIENT_SECRET, settings.GOOGLE_REDIRECT_URI])
 
     def authorization_url(self, state: str) -> str:
+        print(settings.GOOGLE_REDIRECT_URI)
         params = {
             "client_id": settings.GOOGLE_CLIENT_ID,
             "redirect_uri": settings.GOOGLE_REDIRECT_URI,

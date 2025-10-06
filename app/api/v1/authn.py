@@ -2,6 +2,8 @@ import secrets
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi import status
 from fastapi.responses import RedirectResponse
+import urllib
+from app.core.config import settings
 from app.core.database import get_session
 from app.core.security.providers import get_provider
 from app.schemas.authn import (
@@ -74,7 +76,7 @@ async def oauth_authorize(name: str):
     return RedirectResponse(url)
 
 
-@router.get("/auth/provider/{name}/callback", response_model=TokenResponse)
+@router.get("/auth/provider/{name}/callback")
 async def oauth_callback(
     name: str, code: str, session: AsyncSession = Depends(get_session)
 ):
@@ -89,4 +91,6 @@ async def oauth_callback(
     )
     await session.commit()
     token = issue_token_for_user(user)
-    return TokenResponse(access_token=token)
+
+    redirect_url = f"{settings.OAUTH_REDIRECT_URI}?{urllib.parse.urlencode({'access_token': token,'token_type':'bearer'})}"
+    return RedirectResponse(redirect_url)

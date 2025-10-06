@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     JWT_ALG: str = "HS256"
     ACCESS_TOKEN_EXPIRES_MINUTES: int = 60
 
+    OAUTH_REDIRECT_URI: str | None = None
+
     ALLOWED_PROVIDERS: str = "google,microsoft,ldap"
 
     GOOGLE_CLIENT_ID: str | None = None
